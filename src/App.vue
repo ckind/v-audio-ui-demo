@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <AudioContextSetup />
+
     <audio controls :src="trackSrc" />
 
     <br />
@@ -21,12 +23,14 @@ import { defineComponent, reactive } from "vue";
 import WebAudioHelpers from "./util/web-audio-helpers";
 import ChannelStrip from "@/components/channel-strip.vue";
 import MasterChannel from "@/components/master-channel.vue";
+import AudioContextSetup from "@/components/audio-context-setup.vue";
 
 export default defineComponent({
   name: "ServeDev",
   components: {
     ChannelStrip,
     MasterChannel,
+    AudioContextSetup
   },
   setup() {
     const ctx = WebAudioHelpers.setupAudioContext();

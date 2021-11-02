@@ -5,4 +5,4 @@ import VAudioUI from "v-audio-ui"
 const app = createApp(App);
 
 app.use(VAudioUI);
-app.mount('#app')
+app.mount('#app');
