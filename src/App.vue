@@ -1,17 +1,22 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <v-a-fader v-model="test" :minValue="0" :maxValue="1" />
+  <v-a-knob v-model="test" :minValue="0" :maxValue="1" />
+  <br />
+  {{ test }}
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import { defineComponent } from "vue";
+import HelloWorld from "./components/HelloWorld.vue";
 
 export default defineComponent({
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  name: "App",
+  components: {},
+  data() {
+    return {
+      test: 0,
+    };
+  },
 });
 </script>
 

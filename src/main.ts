@@ -1,4 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import VAudioUI from "v-audio-ui"
 
-createApp(App).mount('#app')
+const app = createApp(App);
+
+app.use(VAudioUI);
+app.mount('#app')
