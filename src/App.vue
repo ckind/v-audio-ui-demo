@@ -1,31 +1,84 @@
 <template>
-  <v-a-fader v-model="test" :minValue="0" :maxValue="1" />
-  <v-a-knob v-model="test" :minValue="0" :maxValue="1" />
-  <br />
-  {{ test }}
+  <div id="app">
+    <audio controls :src="trackSrc" />
+
+    <br />
+
+    <div class="console">
+      <ChannelStrip :input="channelInput" :output="channelOutput" />
+      <!-- <ChannelStrip :input="channelInput" :output="dummyGain" />
+    <ChannelStrip :input="channelInput" :output="dummyGain" />
+    <ChannelStrip :input="channelInput" :output="dummyGain" />
+    <ChannelStrip :input="channelInput" :output="dummyGain" />
+    <ChannelStrip :input="channelInput" :output="dummyGain" /> -->
+      <MasterChannel :input="channelOutput" :output="audioCtx.destination" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive } from "vue";
+import WebAudioHelpers from "./util/web-audio-helpers";
+import ChannelStrip from "@/components/channel-strip.vue";
+import MasterChannel from "@/components/master-channel.vue";
 
 export default defineComponent({
-  name: "App",
-  components: {},
-  data() {
-    return {
-      test: 0,
-    };
+  name: "ServeDev",
+  components: {
+    ChannelStrip,
+    MasterChannel,
+  },
+  setup() {
+    const ctx = WebAudioHelpers.setupAudioContext();
+    const osc = ctx.createOscillator();
+    const channelInput = ctx.createGain();
+    const channelOutput = ctx.createGain();
+    const dummyGain = ctx.createGain();
+
+    const state = reactive({
+      channelInput: channelInput,
+      channelOutput: channelOutput,
+      audioCtx: ctx,
+      osc: osc,
+      dummyGain: dummyGain,
+    });
+
+    return state;
+  },
+  computed: {
+    trackSrc() {
+      return require("@/assets/lost-in-the-fog.wav");
+      // return require("@/assets/maenads.wav");
+    },
+  },
+  mounted(): void {
+    // const f = 200;
+    // this.osc.frequency.setValueAtTime(f, this.audioCtx.currentTime);
+    // this.osc.start();
+
+    // WebAudioHelpers.requestMicrophoneAccess(this.audioCtx, (source: MediaStreamAudioSourceNode) => {
+    //   source.connect(this.channelInput);
+    // });
+
+    // get the audio element
+    const audioElement = document.querySelector("audio")!;
+
+    // pass it into the audio context
+    const track = this.audioCtx.createMediaElementSource(audioElement);
+    track.connect(this.channelInput);
   },
 });
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+
+<style scoped>
+.ui-component {
+  margin: 2px;
+}
+.stereo-meter-container {
+  display: inline-block;
+}
+.console {
+  display: flex;
 }
 </style>
